@@ -1,0 +1,11 @@
+body{
+    background-color: rgb(10, 11, 0);
+    text-align: center ;
+    color: rgb(243, 87, 35);
+}
+th{
+    border: 3px solid red;
+}
+td{
+    border:2px solid rgba(221, 162, 23, 0.552);
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Tracker Extension</title>
+    <style>
+        body {
+            width: 200px;
+            padding: 10px;
+        }
+
+        button {
+            display: block;
+            margin: 10px 0;
+            padding: 5px 10px;
+        }
+
+        #attendance-status {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Attendance Tracker</h2>
+    <button id="start-btn">Start</button>
+    <button id="stop-btn">Stop</button>
+    <div id="attendance-status">
+        Attendance: <span id="attendance-count">0</span>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

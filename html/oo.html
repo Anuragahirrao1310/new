@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Page</title>
+    <style>
+        body {
+            background-color: #111;
+            margin: 0;
+            padding: 0;
+        }
+
+        .metallic-bar {
+            background-color: silver;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 60px;
+            padding: 0 20px;
+            position: fixed;
+            bottom: 3cm;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .app-name {
+            color: black;
+            font-size: 18px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .bubble {
+            width: 80px;
+            height: 80px;
+            background-color: #777;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            position: fixed;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: opacity 0.3s ease, bottom 0.3s ease;
+            opacity: 0;
+            z-index: 2;
+        }
+
+        .bubble:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="metallic-bar">
+        <div class="app-name" onmouseover="toggleBubble(this)">YouTube</div>
+        <div class="app-name" onmouseover="toggleBubble(this)">Instagram</div>
+        <div class="app-name" onmouseover="toggleBubble(this)">Gmail</div>
+        <div class="app-name" onmouseover="toggleBubble(this)">Telegram</div>
+    </div>
+
+    <div class="bubble youtube" onclick="openApp('https://www.youtube.com')">YouTube</div>
+    <div class="bubble instagram" onclick="openApp('https://www.instagram.com')">Instagram</div>
+    <div class="bubble gmail" onclick="openApp('https://mail.google.com')">Gmail</div>
+    <div class="bubble telegram" onclick="openApp('https://web.telegram.org')">Telegram</div>
+
+    <script>
+        function openApp(url) {
+            window.open(url, '_blank');
+        }
+
+        function toggleBubble(element) {
+            const bubble = document.querySelector('.bubble.' + element.innerText.toLowerCase());
+            if (element.classList.contains('active')) {
+                bubble.style.opacity = 0;
+                bubble.style.bottom = '-200px';
+                element.classList.remove('active');
+            } else {
+                bubble.style.opacity = 1;
+                bubble.style.bottom = '50%';
+                element.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

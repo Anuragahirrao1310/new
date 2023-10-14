@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Chat</title>
+    <style>
+        #local-video {
+            width: 320px;
+            height: 240px;
+        }
+
+        #remote-video {
+            width: 320px;
+            height: 240px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Chat</h1>
+
+    <video id="local-video" autoplay muted></video>
+    <video id="remote-video" autoplay></video>
+
+    <button id="start-button">Start Video Chat</button>
+    <button id="stop-button">Stop Video Chat</button>
+
+    <script src="https://cdn.socket.io/socket.io-4.0.1.js"></script>
+    <script>
+        const socket = io();
+
+        const localVideo = document.getElementById('local-video');
+        const remoteVideo = document.getElementById('remote-video');
+        const startButton = document.getElementById('start-button');
+        const stopButton = document.getElementById('stop-button');
+
+        let localStream;
+        let peerConnection;
+
+        startButton.addEventListener('click', startVideoChat);
+        stopButton.addEventListener('click', stopVideoChat);
+
+        function startVideoChat() {
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then(stream => {
+                    localVideo.srcObject = stream;
+                    localStream = stream;
+                    
+                    socket.emit('join', 'room-1');
+                })
+                .catch(error => {
+                    console.error('Error accessing media devices:', error);
+                });
+        }
+
+        function stopVideoChat() {
+            localStream.getTracks().forEach(track => track.stop());
+            localVideo.srcObject = null;
+
+            if (peerConnection) {
+                peerConnection.close();
+                peerConnection = null;
+            }
+
+            socket.emit('leave', 'room-1');
+        }
+
+        socket.on('offer', handleOffer);
+        socket.on('answer', handleAnswer);
+        socket.on('ice-candidate', handleIceCandidate);
+
+        function handleOffer(offer) {
+            peerConnection = new RTCPeerConnection();
+
+            localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+            peerConnection.onicecandidate = event => {
+                if (event.candidate) {
+                    socket.emit('ice-candidate', event.candidate);
+                }
+            };
+
+            peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
+                .then(() => peerConnection.createAnswer())
+                .then(answer => peerConnection.setLocalDescription(answer))
+                .then(() => {
+                    socket.emit('answer', answer);
+                });
+
+            peerConnection.ontrack = event => {
+                remoteVideo.srcObject = event.streams[0];
+            };
+        }
+
+        function handleAnswer(answer) {
+            peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+        }
+
+        function handleIceCandidate(candidate) {
+            peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        }
+    </script>
+</body>
+</html>

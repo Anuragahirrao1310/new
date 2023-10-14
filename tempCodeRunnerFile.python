@@ -1,0 +1,9 @@
+list1 = ["MIT", "SOE", "MIT", "ADTU", "ADT", "Loni", "Design", "Food", "Technology"]
+
+print("The number of times MIT present in list is:")
+count_mit = list1.count("MIT")
+print(count_mit)  # Print output i.e. count
+
+print("The number of times ADT present in list is:")
+count_adt = list1.count("ADT")
+print(count_adt)  # Print output i.e. count
