@@ -1,0 +1,45 @@
+{
+    "manifest_version": 3,
+    "name": "Teams Attention Detector Extension",
+    "version": "1.0",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "declarativeContent"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "images/icon16.png",
+            "48": "images/icon48.png",
+            "128": "images/icon128.png"
+        }
+    },
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+    },
+    "declarativeNetRequest": {
+        "ruleResources": [
+            {
+                "id": "rules",
+                "enabled": true,
+                "path": "blockerRules.json"
+            }
+        ]
+    },
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+L",
+                "mac": "MacCtrl+Shift+L"
+            },
+            "description": "Toggle attention monitoring"
+        }
+    },
+    "options_page": "options.html"
+}

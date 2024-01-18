@@ -2,6 +2,34 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "STtest",
+      "request": "launch",
+      "mainClass": "STtest",
+      "projectName": "code_9bf3136f"
+    },
+    {
+      "type": "java",
+      "name": "assigment1",
+      "request": "launch",
+      "mainClass": "java.assigment1",
+      "projectName": "code_9bf3136f"
+    },
+    {
+      "type": "java",
+      "name": "lab1",
+      "request": "launch",
+      "mainClass": "java.lab1",
+      "projectName": "code_9bf3136f"
+    },
+    {
+      "type": "java",
+      "name": "hello",
+      "request": "launch",
+      "mainClass": "java.hello",
+      "projectName": "code_9bf3136f"
+    },
+    {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",

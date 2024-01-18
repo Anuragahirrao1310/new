@@ -1,0 +1,52 @@
+#include <iostream>
+#include <queue>
+#include <cctype>
+
+using namespace std;
+
+struct Node {
+    char data;
+    Node* left;
+    Node* right;
+
+    Node(char value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+bool isOperand(char c) {
+    return isalpha(c) || isdigit(c);
+}
+
+Node* buildTreeFromPrefix(string expression) {
+    queue<Node*> nodeQueue;
+
+    for (int i = 0; i < expression.size(); ++i) {
+        char currentChar = expression[i];
+
+        if (isOperand(currentChar)) {
+            nodeQueue.push(new Node(currentChar));
+        } else {
+            
+            Node* operand1 = nodeQueue.front(); nodeQueue.pop();
+            Node* operand2 = nodeQueue.front(); nodeQueue.pop();
+
+            Node* newNode = new Node(currentChar);
+            newNode->left = operand1;
+            newNode->right = operand2;
+
+            nodeQueue.push(newNode);
+        }
+    }
+
+    return nodeQueue.front();
+}
+
+void inorderTraversal(Node* root) {
+    if (root == nullptr) {
+        return;
+    }
+
+    inorderTraversal(root->left);
+    cout << root->data << " ";
+    inorderTraversal(root->right);
+}
+
