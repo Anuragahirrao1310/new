@@ -1,0 +1,13 @@
+body{
+    background-color: beige;
+}
+form{
+    background-color: rgb(27, 182, 182);
+    border-radius: 7px solid red;
+}
+form:hover{
+    background-color: rgb(213, 36, 36);
+}
+label:hover{
+    background-color: rgb(237, 154, 46);
+}
