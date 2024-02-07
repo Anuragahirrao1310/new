@@ -1,78 +1,90 @@
 #include <iostream>
-#include <stack>
-#include <string>
-
 using namespace std;
 
-struct Node {
-    char data;
+class Node {
+public:
+    int key;
     Node* left;
     Node* right;
-    Node* next;  // Threaded pointer
-    bool leftThreaded;
-    bool rightThreaded;
+    bool isThreaded;
 
-    Node(char value) : data(value), left(nullptr), right(nullptr), next(nullptr), leftThreaded(false), rightThreaded(false) {}
+    Node(int value) : key(value), left(nullptr), right(nullptr), isThreaded(false) {}
 };
 
-bool isOperator(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/';
-}
+class ThreadedBST {
+private:
+    Node* root;
 
-Node* constructThreadedBSTFromPrefix(string prefix) {
-    stack<Node*> s;
-    int length = prefix.size();
+    Node* insertUtil(Node* root, int key) {
+        if (!root)
+            return new Node(key);
 
-    for (int i = length - 1; i >= 0; i--) {
-        char c = prefix[i];
+        if (key < root->key) {
+            root->left = insertUtil(root->left, key);
+            root->left->right = root;
+            root->left->isThreaded = true;
+        } else if (key > root->key) {
+            root->right = insertUtil(root->right, key);
+        }
 
-        if (isOperator(c)) {
-            Node* newNode = new Node(c);
-            newNode->left = s.top();
-            newNode->leftThreaded = true;
-            s.pop();
-            newNode->right = s.top();
-            newNode->rightThreaded = true;
-            s.pop();
-            s.push(newNode);
-        } else {
-            Node* newNode = new Node(c);
-            s.push(newNode);
+        return root;
+    }
+
+    void threadedInorderUtil(Node* root) {
+        Node* current = root;
+
+        while (current) {
+            while (current->left)
+                current = current->left;
+
+            std::cout << current->key << " ";
+
+            if (current->isThreaded)
+                current = current->right;
+            else
+                break;
         }
     }
 
-    Node* root = s.top();
-    root->leftThreaded = true;  // Additional threading for the leftmost node
-    root->rightThreaded = true;  // Additional threading for the rightmost node
-
-    return root;
-}
-
-// Function to perform in-order traversal using threaded pointers
-void threadedInorderTraversal(Node* root) {
-    Node* current = root;
-
-    while (current && !current->leftThreaded) {
-        current = current->left;
-    }
-
-    while (current) {
-        cout << current->data << " ";
-
-        if (current->rightThreaded) {
-            current = current->right;
-        } else {
-            current = current->next;
+    void inorderUtil(Node* root) {
+        if (root) {
+            inorderUtil(root->left);
+            std::cout << root->key << " ";
+            inorderUtil(root->right);
         }
     }
-}
+
+public:
+    ThreadedBST() : root(nullptr) {}
+
+    void insert(int key) {
+        root = insertUtil(root, key);
+    }
+
+    void threadedInorder() {
+        threadedInorderUtil(root);
+        std::cout << std::endl;
+    }
+
+    void inorder() {
+        inorderUtil(root);
+        std::cout << std::endl;
+    }
+};
 
 int main() {
-    string prefix = "*+ab+cd";
-    Node* root = constructThreadedBSTFromPrefix(prefix);
-    cout << "In-order traversal (using threaded pointers): ";
-    threadedInorderTraversal(root);
-    cout << endl;
+    ThreadedBST threadedBST;
+
+    threadedBST.insert(4);
+    threadedBST.insert(2);
+    threadedBST.insert(6);
+    threadedBST.insert(1);
+    threadedBST.insert(3);
+    threadedBST.insert(5);
+    threadedBST.insert(7);
+
+    cout << "Threaded Inorder Traversal: ";
+    threadedBST.threadedInorder();
 
     return 0;
 }
