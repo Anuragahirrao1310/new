@@ -13,7 +13,6 @@ class SingleThreadedBST {
 private:
     Node* root;
 
-    // Helper function for insertion
     Node* insertUtil(Node* root, int key) {
         if (!root)
             return new Node(key);
@@ -26,32 +25,31 @@ private:
         return root;
     }
 
-    // Helper function for threaded inorder traversal
     void threadedInorderUtil(Node* root) {
-        Node* current = root;
+       Node* current = root;
 
+    while (current || !s.empty()) {
         while (current) {
-            while (current->left)
-                current = current->left;
-
-            std::cout << current->key << " ";
-
-            if (current->right)
-                current = current->right;
-            else
-                break;
+            s.push(current);
+            current = current->left;
         }
+
+        current = s.top();
+        s.pop();
+
+        cout << current->key << " ";
+
+        current = current->right;
+    }
     }
 
 public:
     SingleThreadedBST() : root(nullptr) {}
 
-    // Public function to insert a key
     void insert(int key) {
         root = insertUtil(root, key);
     }
 
-    // Public function to perform threaded inorder traversal
     void threadedInorder() {
         threadedInorderUtil(root);
         std::cout << std::endl;
@@ -61,7 +59,6 @@ public:
 int main() {
     SingleThreadedBST singleThreadedBST;
 
-    // Insert keys into the single-threaded BST
     singleThreadedBST.insert(4);
     singleThreadedBST.insert(2);
     singleThreadedBST.insert(6);
@@ -70,7 +67,6 @@ int main() {
     singleThreadedBST.insert(5);
     singleThreadedBST.insert(7);
 
-    // Perform threaded inorder traversal
     std::cout << "Threaded Inorder Traversal: ";
     singleThreadedBST.threadedInorder();
 

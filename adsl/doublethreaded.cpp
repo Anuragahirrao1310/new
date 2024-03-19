@@ -84,7 +84,6 @@ int main() {
     threadedBST.insert(7);
 
     cout << "Threaded Inorder Traversal: ";
-    threadedBST.threadedInorder();
+    threadedBST.threaded
 
-    return 0;
 }
