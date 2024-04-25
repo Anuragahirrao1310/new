@@ -61,5 +61,6 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
-  "livePreview.hostIP": "192.168.137.1"
+  "livePreview.hostIP": "192.168.137.1",
+  "livePreview.defaultPreviewPath": "/html/game/catchgame/index.html"
 }
