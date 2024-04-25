@@ -1,9 +1,7 @@
 #include <iostream>
 #include <stack>
 #include <string>
-
 using namespace std;
-
 struct Node {
     char data;
     Node* left;
@@ -12,147 +10,147 @@ struct Node {
     Node(char value) : data(value), left(nullptr), right(nullptr) {}
 };
 
-bool isOperator(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/';
+bool isOperand(char c) {
+    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
 }
 
-Node* constructTreeFromPrefix(const string& prefix, int& pos) {
-    if (pos < 0) return nullptr;
+Node* constructTree(string prefixExpression) {
+    stack<Node*> st;
 
-    char c = prefix[pos--];
-    Node* newNode = new Node(c);
+    for (int i = prefixExpression.length() - 1; i >= 0; i--) {
+        char c = prefixExpression[i];
 
-    if (isOperator(c)) {
-        newNode->right = constructTreeFromPrefix(prefix, pos);
-        newNode->left = constructTreeFromPrefix(prefix, pos);
+        if (isOperand(c)) {
+            st.push(new Node(c));
+        } else {
+            Node* operand1 = st.top();
+            st.pop();
+            Node* operand2 = st.top();
+            st.pop();
+
+            Node* newNode = new Node(c);
+            newNode->left = operand1;
+            newNode->right = operand2;
+
+            st.push(newNode);
+        }
     }
 
-    return newNode;
+    return st.top();
 }
 
 void recursivePreorder(Node* root) {
-    if (!root) return;
-    cout << root->data << " ";
-    recursivePreorder(root->left);
-    recursivePreorder(root->right);
+    if (root != nullptr) {
+        cout << root->data << " ";
+        recursivePreorder(root->left);
+        recursivePreorder(root->right);
+    }
 }
 
-void nonRecursivePreorder(Node* root) {
-    if (!root) return;
+void iterativePreorder(Node* root) {
+    if (root == nullptr)
+        return;
 
-    stack<Node*> s;
-    s.push(root);
+    stack<Node*> st;
+    st.push(root);
 
-    while (!s.empty()) {
-        Node* current = s.top();
-        s.pop();
+    while (!st.empty()) {
+        Node* current = st.top();
+        st.pop();
+
         cout << current->data << " ";
 
-        if (current->right) s.push(current->right);
-        if (current->left) s.push(current->left);
+        if (current->right != nullptr)
+            st.push(current->right);
+
+        if (current->left != nullptr)
+            st.push(current->left);
     }
 }
 
 void recursiveInorder(Node* root) {
-    if (!root) return;
-    recursiveInorder(root->left);
-    cout << root->data << " ";
-    recursiveInorder(root->right);
+    if (root != nullptr) {
+        recursiveInorder(root->left);
+        cout << root->data << " ";
+        recursiveInorder(root->right);
+    }
 }
 
-void nonRecursiveInorder(Node* root) {
-    if (!root) return;
+void iterativeInorder(Node* root) {
+    stack<Node*> st;
 
-    stack<Node*> s;
-    Node* current = root;
-
-    while (current || !s.empty()) {
-        while (current) {
-            s.push(current);
-            current = current->left;
+    while (root != nullptr || !st.empty()) {
+        while (root != nullptr) {
+            st.push(root);
+            root = root->left;
         }
 
-        current = s.top();
-        s.pop();
+        root = st.top();
+        st.pop();
 
-        cout << current->data << " ";
+        cout << root->data << " ";
 
-        current = current->right;
+        root = root->right;
     }
 }
 
 void recursivePostorder(Node* root) {
-    if (!root) return;
-    recursivePostorder(root->left);
-    recursivePostorder(root->right);
-    cout << root->data << " ";
+    if (root != nullptr) {
+        recursivePostorder(root->left);
+        recursivePostorder(root->right);
+        cout << root->data << " ";
+    }
 }
 
-void nonRecursivePostorder(Node* root) {
-    if (!root) return;
+void iterativePostorder(Node* root) {
+    stack<Node*> st;
+    stack<char> output;
 
-    stack<Node*> s1, s2;
-    s1.push(root);
+    st.push(root);
 
-    while (!s1.empty()) {
-        Node* current = s1.top();
-        s1.pop();
-        s2.push(current);
+    while (!st.empty()) {
+        Node* current = st.top();
+        st.pop();
 
-        if (current->left) s1.push(current->left);
-        if (current->right) s1.push(current->right);
+        output.push(current->data);
+
+        if (current->left != nullptr)
+            st.push(current->left);
+
+        if (current->right != nullptr)
+            st.push(current->right);
     }
 
-    while (!s2.empty()) {
-        cout << s2.top()->data << " ";
-        s2.pop();
+    while (!output.empty()) {
+        cout << output.top() << " ";
+        output.pop();
     }
 }
 
 int main() {
-    string prefix;
-    int choice;
+    string prefixExpression;
+    cout << "Enter a prefix expression: ";
+    getline(cin, prefixExpression);
 
-    cout << "Enter the prefix expression (e.g., *+ab+cd): ";
-    cin >> prefix;
+    Node* root = constructTree(prefixExpression);
 
-    if (prefix.size() <= 1) {
-        cout << "Invalid prefix expression. Please enter a valid prefix expression.\n";
-        return 1;
-    }
+    cout << "\nRecursive Preorder Traversal: ";
+    recursivePreorder(root);
 
-    Node* root = nullptr;
-    int pos = prefix.size() - 1;
-    root = constructTreeFromPrefix(prefix, pos);
+    cout << "\nNon-Recursive Preorder Traversal: ";
+    iterativePreorder(root);
 
-    cout << "Choose the traversal method:\n";
-    cout << "1. Recursive\n";
-    cout << "2. Non-recursive\n";
-    cin >> choice;
+    cout << "\nRecursive Inorder Traversal: ";
+    recursiveInorder(root);
 
-    switch (choice) {
-        case 1:
-            cout << "Recursive Pre-order traversal: ";
-            recursivePreorder(root);
-            cout << "\nRecursive In-order traversal: ";
-            recursiveInorder(root);
-            cout << "\nRecursive Post-order traversal: ";
-            recursivePostorder(root);
-            cout << endl;
-            break;
-        case 2:
-            cout << "Non-recursive Pre-order traversal: ";
-            nonRecursivePreorder(root);
-            cout << "\nNon-recursive In-order traversal: ";
-            nonRecursiveInorder(root);
-            cout << "\nNon-recursive Post-order traversal: ";
-            nonRecursivePostorder(root);
-            cout << endl;
-            break;
-        default:
-            cout << "Invalid choice!\n";
-            break;
-    }
+    cout << "\nNon-Recursive Inorder Traversal: ";
+    iterativeInorder(root);
+
+    cout << "\nRecursive Postorder Traversal: ";
+    recursivePostorder(root);
+
+    cout << "\nNon-Recursive Postorder Traversal: ";
+    iterativePostorder(root);
 
     return 0;
 }
