@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Custom Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .container h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+        .container label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .container input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #1db954;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background-color: #14833b;
+        }
+        .container .toggle {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .container .toggle a {
+            color: #1db954;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 id="form-title">registration</h2>
+        <form id="auth-form">
+            <label for="email">Email</label>
+            <input type="email" id="email" required>
+            <div id="signup-fields" style="display: none;">
+                <label for="first-name">First Name</label>
+                <input type="text" id="first-name">
+                <label for="last-name">Last Name</label>
+                <input type="text" id="last-name">
+                <label for="username">Username</label>
+                <input type="text" id="username" readonly>
+            </div>
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+            <div class="checkbox" id="remember-me-checkbox">
+                <label>
+                    <input type="checkbox" id="remember-me"> Remember me
+                </label>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div class="toggle">
+            <span id="toggle-text">Don't have an account? </span><a href="#" id="toggle-link">Sign up</a>
+        </div>
+    </div>
+
+    <script>
+        const formTitle = document.getElementById('form-title');
+        const authForm = document.getElementById('auth-form');
+        const signupFields = document.getElementById('signup-fields');
+        const toggleText = document.getElementById('toggle-text');
+        const toggleLink = document.getElementById('toggle-link');
+        const firstName = document.getElementById('first-name');
+        const lastName = document.getElementById('last-name');
+        const username = document.getElementById('username');
+        const rememberMeCheckbox = document.getElementById('remember-me-checkbox');
+
+        toggleLink.addEventListener('click', function (event) {
+            event.preventDefault();
+            if (signupFields.style.display === 'none') {
+                signupFields.style.display = 'block';
+                formTitle.innerText = 'Sign Up';
+                toggleText.innerText = 'Already have an account? ';
+                toggleLink.innerText = 'Login';
+                authForm.querySelector('button').innerText = 'Sign Up';
+                rememberMeCheckbox.style.display = 'none';
+            } else {
+                signupFields.style.display = 'none';
+                formTitle.innerText = 'Login';
+                toggleText.innerText = 'Don\'t have an account? ';
+                toggleLink.innerText = 'Sign Up';
+                authForm.querySelector('button').innerText = 'Login';
+                rememberMeCheckbox.style.display = 'block';
+            }
+        });
+
+        firstName.addEventListener('input', updateUsername);
+        lastName.addEventListener('input', updateUsername);
+
+        function updateUsername() {
+            username.value = firstName.value.toLowerCase() + '.' + lastName.value.toLowerCase();
+        }
+    </script>
+</body>
+</html>
